@@ -3,11 +3,13 @@ import { NextResponse } from "next/server";
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
+
   await prisma.product.delete({
     where: {
-      id: Number(params.id),
+      id: Number(id),
     },
   });
 
@@ -18,13 +20,14 @@ export async function DELETE(
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   const body = await request.json();
 
   const product = await prisma.product.update({
     where: {
-      id: Number(params.id),
+      id: Number(id),
     },
     data: {
       name: body.name,
